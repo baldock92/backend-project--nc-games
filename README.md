@@ -10,6 +10,6 @@ The database will be PSQL, and I will interact with it using node-postgres.
 
 Anybody looking to clone this project and run it locally must add a .env file for both the development and test database, and assigning the PGDATABASE to the respective database.
 You can do this by setting up 2 files, .env.development & .env.test 
-Inside the respective file, add PGDATABASE=nc_games or PGDATABASE=nc_games_test
 
+The .env.development will connect to the correct database using PGDATABASE=nc_games and the .env.test will connect to the correct database using PGDATABASE=nc_games_test
 
