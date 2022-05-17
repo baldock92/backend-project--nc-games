@@ -53,17 +53,19 @@ describe("GET review by id, api/reviews/:review_id", () => {
 
         expect(review.review_id).toBe(1);
 
-        expect.objectContaining({
-          review_id: 1,
-          title: "Agricola",
-          review_body: expect.any(String),
-          designer: expect.any(String),
-          review_img_url: expect.any(String),
-          votes: expect.any(Number),
-          category: expect.any(String),
-          owner: expect.any(String),
-          created_at: expect.any(Number),
-        });
+        expect(review).toEqual(
+          expect.objectContaining({
+            review_id: 1,
+            title: "Agricola",
+            review_body: expect.any(String),
+            designer: expect.any(String),
+            review_img_url: expect.any(String),
+            votes: expect.any(Number),
+            category: expect.any(String),
+            owner: expect.any(String),
+            created_at: "2021-01-18T10:00:20.514Z",
+          })
+        );
       });
   });
   test("Status 404 - returns `Route not found` message if the review_id does not exist", () => {
@@ -158,7 +160,6 @@ describe("GET all users /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then(({ body: { users } }) => {
-        
         expect(users).toBeInstanceOf(Array);
         expect(users).toHaveLength(4);
 
@@ -169,6 +170,30 @@ describe("GET all users /api/users", () => {
             avatar_url: expect.any(String),
           });
         });
+      });
+  });
+});
+
+describe("GET - /api/reviews/:review_id (comment count)", () => {
+  test("Status 200 - returns a review object when a review id is inputted, including a comment count", () => {
+    return request(app)
+      .get("/api/reviews/2")
+      .expect(200)
+      .then(({ body: { review } }) => {
+        expect(review).toEqual(
+          expect.objectContaining({
+            review_id: 2,
+            title: expect.any(String),
+            review_body: expect.any(String),
+            designer: expect.any(String),
+            review_img_url: expect.any(String),
+            votes: expect.any(Number),
+            category: expect.any(String),
+            owner: expect.any(String),
+            created_at: "2021-01-18T10:01:41.251Z",
+            comment_count: expect.any(Number),
+          })
+        );
       });
   });
 });

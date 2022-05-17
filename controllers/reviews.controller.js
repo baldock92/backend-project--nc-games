@@ -12,6 +12,8 @@ exports.getReviewById = (req, res, next) => {
     });
 };
 
+
+
 exports.updateReviewById = (req, res, next) => {
   const { review_id } = req.params;
   const { inc_votes } = req.body;
