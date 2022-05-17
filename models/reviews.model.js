@@ -1,8 +1,6 @@
 const db = require("../db/connection");
 
 exports.fetchReviewById = (reviewId) => {
-  
- 
   let queryStr = `SELECT reviews.*, COUNT(comments.review_id) AS comment_count FROM reviews
   LEFT JOIN comments on comments.review_id = reviews.review_id
   WHERE reviews.review_id = $1
@@ -14,32 +12,39 @@ exports.fetchReviewById = (reviewId) => {
     }
     const reviewObj = data.rows[0];
 
-    reviewObj.comment_count = parseInt(reviewObj.comment_count)
-    
+    reviewObj.comment_count = parseInt(reviewObj.comment_count);
+
     return reviewObj;
   });
 };
 
-
-
-
-
 exports.patchReviewById = (review_id, inc_votes) => {
-
-  if(typeof inc_votes !== "number"){
-    return Promise.reject({status : 400, msg : "Bad request"})
+  if (typeof inc_votes !== "number") {
+    return Promise.reject({ status: 400, msg: "Bad request" });
   }
-  
-  
+
   let queryStr = `UPDATE reviews SET votes = votes + $2 WHERE review_id = $1 RETURNING *`;
 
   return db
     .query(queryStr, [review_id, inc_votes])
 
     .then((data) => {
-      if (!data.rows.length){
+      if (!data.rows.length) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }
       return data.rows[0];
     });
+};
+
+exports.fetchReviews = () => {
+  //select all from reviews, comment count added, sorted by date descending oder
+
+  let queryStr = `SELECT reviews.*, COUNT(comments.review_id) AS comment_count FROM reviews
+  LEFT JOIN comments on comments.review_id = reviews.review_id
+  GROUP BY reviews.review_id
+  ORDER BY created_at desc`;
+
+  return db.query(queryStr).then((data) => {
+    return data.rows;
+  });
 };
