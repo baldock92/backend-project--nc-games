@@ -8,9 +8,6 @@ exports.fetchReviewById = (reviewId) => {
   WHERE reviews.review_id = $1
   GROUP BY reviews.review_id`;
 
-  // let queryStr = `SELECT review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at FROM reviews
-  // WHERE review_id =$1`;
-
   return db.query(queryStr, [reviewId]).then((data) => {
     if (!data.rows.length) {
       return Promise.reject({ status: 404, msg: "Route not found" });
