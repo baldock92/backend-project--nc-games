@@ -1,16 +1,31 @@
 const db = require("../db/connection");
 
-exports.fetchReviewById = (review_id) => {
-  let queryStr = `SELECT review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at FROM reviews
-  WHERE review_id =$1`;
+exports.fetchReviewById = (reviewId) => {
+  
+ 
+  let queryStr = `SELECT reviews.*, COUNT(comments.review_id) AS comment_count FROM reviews
+  LEFT JOIN comments on comments.review_id = reviews.review_id
+  WHERE reviews.review_id = $1
+  GROUP BY reviews.review_id`;
 
-  return db.query(queryStr, [review_id]).then((data) => {
+  // let queryStr = `SELECT review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at FROM reviews
+  // WHERE review_id =$1`;
+
+  return db.query(queryStr, [reviewId]).then((data) => {
     if (!data.rows.length) {
       return Promise.reject({ status: 404, msg: "Route not found" });
     }
-    return data.rows[0];
+    const reviewObj = data.rows[0];
+
+    reviewObj.comment_count = parseInt(reviewObj.comment_count)
+    
+    return reviewObj;
   });
 };
+
+
+
+
 
 exports.patchReviewById = (review_id, inc_votes) => {
 
