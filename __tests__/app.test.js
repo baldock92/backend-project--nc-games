@@ -85,7 +85,7 @@ describe("GET review by id, api/reviews/:review_id", () => {
 });
 
 describe("Update review by review_id, PATCH /api/reviews/:review_id", () => {
-  test(`Status 201 - Returns with the updated review, when provided with a review_id and a new Vote object`, () => {
+  test(`Status 200 - Returns with the updated review, when provided with a review_id and a new Vote object`, () => {
     const newVote = { inc_votes: 3 };
 
     //votes has 5 originally, adds 3 from inc_votes
@@ -105,7 +105,7 @@ describe("Update review by review_id, PATCH /api/reviews/:review_id", () => {
     return request(app)
       .patch("/api/reviews/2")
       .send(newVote)
-      .expect(201)
+      .expect(200)
       .then(({ body: { updatedReview } }) => {
         expect(updatedReview).toEqual(expected);
       });
