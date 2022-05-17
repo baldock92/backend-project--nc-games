@@ -49,10 +49,14 @@ describe("GET review by id, api/reviews/:review_id", () => {
       .get("/api/reviews/1")
       .expect(200)
       .then(({ body: { review } }) => {
+          
         expect(review).toBeInstanceOf(Object);
+
+        expect(review.review_id).toBe(1);
+
         expect.objectContaining({
-          review_id: expect.any(Number),
-          title: expect.any(String),
+          review_id: 1,
+          title: 'Agricola',
           review_body: expect.any(String),
           designer: expect.any(String),
           review_img_url: expect.any(String),
@@ -61,6 +65,7 @@ describe("GET review by id, api/reviews/:review_id", () => {
           owner: expect.any(String),
           created_at: expect.any(Number),
         });
+        
       });
   });
   test("Status 404 - returns `Route not found` message if the review_id does not exist", () => {
@@ -72,11 +77,11 @@ describe("GET review by id, api/reviews/:review_id", () => {
       });
   });
   test("Status 400 - returns `Bad request` message if something that is not a number is passed as the review_id", () => {
-      return request(app)
+    return request(app)
       .get("/api/reviews/cats")
       .expect(400)
       .then((res) => {
-        expect(res.body.msg).toBe("Bad request")
-      })
-  })
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
 });
