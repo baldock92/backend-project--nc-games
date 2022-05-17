@@ -54,18 +54,18 @@ describe("GET review by id, api/reviews/:review_id", () => {
         expect(review.review_id).toBe(1);
 
         expect(review).toEqual(
-        expect.objectContaining({
-          review_id: 1,
-          title: "Agricola",
-          review_body: expect.any(String),
-          designer: expect.any(String),
-          review_img_url: expect.any(String),
-          votes: expect.any(Number),
-          category: expect.any(String),
-          owner: expect.any(String),
-          created_at: "2021-01-18T10:00:20.514Z",
-        })
-        )
+          expect.objectContaining({
+            review_id: 1,
+            title: "Agricola",
+            review_body: expect.any(String),
+            designer: expect.any(String),
+            review_img_url: expect.any(String),
+            votes: expect.any(Number),
+            category: expect.any(String),
+            owner: expect.any(String),
+            created_at: "2021-01-18T10:00:20.514Z",
+          })
+        );
       });
   });
   test("Status 404 - returns `Route not found` message if the review_id does not exist", () => {
@@ -154,6 +154,26 @@ describe("Update review by review_id, PATCH /api/reviews/:review_id", () => {
   });
 });
 
+describe("GET all users /api/users", () => {
+  test("Status 200, returns with an array of user objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users).toBeInstanceOf(Array);
+        expect(users).toHaveLength(4);
+
+        users.forEach((user) => {
+          expect.objectContaining({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+});
+
 describe("GET - /api/reviews/:review_id (comment count)", () => {
   test("Status 200 - returns a review object when a review id is inputted, including a comment count", () => {
     return request(app)
@@ -171,7 +191,7 @@ describe("GET - /api/reviews/:review_id (comment count)", () => {
             category: expect.any(String),
             owner: expect.any(String),
             created_at: "2021-01-18T10:01:41.251Z",
-            comment_count: expect.any(Number)
+            comment_count: expect.any(Number),
           })
         );
       });
