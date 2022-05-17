@@ -16,12 +16,12 @@ afterAll(() => {
 });
 
 describe("Incorrect paths", () => {
-  test("Status 404, responds with Route not found", () => {
+  test("Status 404, responds with Not found", () => {
     return request(app)
       .get("/api/chickens")
       .expect(404)
       .then((reponse) => {
-        expect(reponse.body.msg).toBe("Route not found");
+        expect(reponse.body.msg).toBe("Not found");
       });
   });
 });
@@ -49,14 +49,13 @@ describe("GET review by id, api/reviews/:review_id", () => {
       .get("/api/reviews/1")
       .expect(200)
       .then(({ body: { review } }) => {
-          
         expect(review).toBeInstanceOf(Object);
 
         expect(review.review_id).toBe(1);
 
         expect.objectContaining({
           review_id: 1,
-          title: 'Agricola',
+          title: "Agricola",
           review_body: expect.any(String),
           designer: expect.any(String),
           review_img_url: expect.any(String),
@@ -65,7 +64,6 @@ describe("GET review by id, api/reviews/:review_id", () => {
           owner: expect.any(String),
           created_at: expect.any(Number),
         });
-        
       });
   });
   test("Status 404 - returns `Route not found` message if the review_id does not exist", () => {
@@ -82,6 +80,74 @@ describe("GET review by id, api/reviews/:review_id", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("Update review by review_id, PATCH /api/reviews/:review_id", () => {
+  test(`Status 200 - Returns with the updated review, when provided with a review_id and a new Vote object`, () => {
+    const newVote = { inc_votes: 3 };
+
+    //votes has 5 originally, adds 3 from inc_votes
+    const expected = {
+      review_id: 2,
+      title: "Jenga",
+      designer: "Leslie Scott",
+      owner: "philippaclaire9",
+      review_img_url:
+        "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+      review_body: "Fiddly fun for all the family",
+      category: "dexterity",
+      created_at: "2021-01-18T10:01:41.251Z",
+      votes: 8,
+    };
+
+    return request(app)
+      .patch("/api/reviews/2")
+      .send(newVote)
+      .expect(200)
+      .then(({ body: { updatedReview } }) => {
+        expect(updatedReview).toEqual(expected);
+      });
+  });
+  test("404 - Valid number in path but doesn't match a review", () => {
+    const newVote = { inc_votes: 3 };
+    return request(app)
+      .patch("/api/reviews/999999")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+  test("400 - Something that is not a number is passed as the id", () => {
+    const newVote = { inc_votes: 3 };
+    return request(app)
+      .patch("/api/reviews/parrots")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400 - Something that is not a number is passed as the inc_votes amount", () => {
+    const newVote = { inc_votes: "stop breaking my test" };
+    return request(app)
+      .patch("/api/reviews/2")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("Status 400 - no inc_votes key in body of patch request", () => {
+    const bodyToSend = { sausageVotes: 15 };
+    return request(app)
+      .patch("/api/reviews/3")
+      .send(bodyToSend)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
       });
   });
 });
