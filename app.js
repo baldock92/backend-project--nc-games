@@ -17,7 +17,7 @@ app.patch("/api/reviews/:review_id", updateReviewById);
 //error handling below
 
 app.use("/*", (req, res, next) => {
-  res.status(404).send({ msg: "Route not found" });
+  res.status(404).send({ msg: "Not found" });
 });
 
 app.use((err, req, res, next) => {

@@ -16,12 +16,12 @@ afterAll(() => {
 });
 
 describe("Incorrect paths", () => {
-  test("Status 404, responds with Route not found", () => {
+  test("Status 404, responds with Not found", () => {
     return request(app)
       .get("/api/chickens")
       .expect(404)
       .then((reponse) => {
-        expect(reponse.body.msg).toBe("Route not found");
+        expect(reponse.body.msg).toBe("Not found");
       });
   });
 });
@@ -117,7 +117,7 @@ describe("Update review by review_id, PATCH /api/reviews/:review_id", () => {
       .send(newVote)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Route not found");
+        expect(body.msg).toBe("Not found");
       });
   });
   test("400 - Something that is not a number is passed as the id", () => {
@@ -135,6 +135,16 @@ describe("Update review by review_id, PATCH /api/reviews/:review_id", () => {
     return request(app)
       .patch("/api/reviews/2")
       .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("Status 400 - no inc_votes key in body of patch request", () => {
+    const bodyToSend = { sausageVotes: 15 };
+    return request(app)
+      .patch("/api/reviews/3")
+      .send(bodyToSend)
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");

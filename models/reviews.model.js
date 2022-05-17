@@ -26,7 +26,7 @@ exports.patchReviewById = (review_id, inc_votes) => {
 
     .then((data) => {
       if (!data.rows.length){
-        return Promise.reject({ status: 404, msg: "Route not found" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
       return data.rows[0];
     });
