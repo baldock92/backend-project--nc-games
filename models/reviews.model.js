@@ -45,11 +45,12 @@ exports.fetchReviews = () => {
 
   return db.query(queryStr).then((data) => {
     const reviewsArr = data.rows;
+
+    
     reviewsArr.forEach((review) => {
       review.comment_count = parseInt(review.comment_count);
       review.created_at = review.created_at.toISOString();
     })
-    
     return reviewsArr;
   });
 };

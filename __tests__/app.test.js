@@ -233,3 +233,53 @@ describe("GET - /api/reviews", () => {
       });
   });
 });
+
+describe("GET - /api/reviews/:review_id/comments", () => {
+  test("Status 200 - should respond with an array of comments for the given review_id", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toBeInstanceOf(Array);
+        expect(comments).toHaveLength(3);
+
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              review_id: 2,
+            })
+          );
+        });
+      });
+  });
+  test("Status 404 - Valid number passed as the review_id, but doesn't match a review_id ", () => {
+    return request(app)
+      .get("/api/reviews/9999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+  test("Status 400 - Something that is not a number is passed as the review_id", () => {
+    return request(app)
+      .get("/api/reviews/chicken/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("Status 200 - Valid review_id number passed but no comments are present for that review_id", () => {
+    return request(app)
+      .get("/api/reviews/1/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toEqual([]);
+      });
+  });
+});
+
