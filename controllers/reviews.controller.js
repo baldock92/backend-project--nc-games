@@ -1,4 +1,9 @@
-const { fetchReviewById, patchReviewById } = require("../models/reviews.model");
+const res = require("express/lib/response");
+const {
+  fetchReviewById,
+  patchReviewById,
+  fetchReviews,
+} = require("../models/reviews.model");
 
 exports.getReviewById = (req, res, next) => {
   const { review_id } = req.params;
@@ -12,8 +17,6 @@ exports.getReviewById = (req, res, next) => {
     });
 };
 
-
-
 exports.updateReviewById = (req, res, next) => {
   const { review_id } = req.params;
   const { inc_votes } = req.body;
@@ -21,6 +24,16 @@ exports.updateReviewById = (req, res, next) => {
   patchReviewById(review_id, inc_votes)
     .then((updatedReview) => {
       res.status(200).send({ updatedReview });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getReviews = (req, res, next) => {
+  fetchReviews()
+    .then((reviews) => {
+      res.status(200).send({ reviews });
     })
     .catch((err) => {
       next(err);

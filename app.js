@@ -1,7 +1,7 @@
 const express = require("express");
 
 const { getCategories } = require("./controllers/categories.controller");
-const { getReviewById, updateReviewById } = require("./controllers/reviews.controller");
+const { getReviewById, updateReviewById, getReviews } = require("./controllers/reviews.controller");
 const { getUsers } = require("./controllers/users.controller");
 
 
@@ -15,7 +15,7 @@ app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewById);
 app.patch("/api/reviews/:review_id", updateReviewById);
 app.get("/api/users", getUsers)
-
+app.get("/api/reviews", getReviews)
 //error handling below
 
 app.use("/*", (req, res, next) => {
