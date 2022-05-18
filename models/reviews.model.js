@@ -37,14 +37,19 @@ exports.patchReviewById = (review_id, inc_votes) => {
 };
 
 exports.fetchReviews = () => {
-  //select all from reviews, comment count added, sorted by date descending oder
 
-  let queryStr = `SELECT reviews.*, COUNT(comments.review_id) AS comment_count FROM reviews
+  let queryStr = `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id) AS comment_count FROM reviews
   LEFT JOIN comments on comments.review_id = reviews.review_id
   GROUP BY reviews.review_id
   ORDER BY created_at desc`;
 
   return db.query(queryStr).then((data) => {
-    return data.rows;
+    const reviewsArr = data.rows;
+    reviewsArr.forEach((review) => {
+      review.comment_count = parseInt(review.comment_count);
+      review.created_at = review.created_at.toISOString();
+    })
+    
+    return reviewsArr;
   });
 };
