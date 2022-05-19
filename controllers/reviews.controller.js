@@ -3,6 +3,7 @@ const {
   fetchReviewById,
   patchReviewById,
   fetchReviews,
+  doesCategoryExist,
 } = require("../models/reviews.model");
 
 exports.getReviewById = (req, res, next) => {
@@ -31,8 +32,38 @@ exports.updateReviewById = (req, res, next) => {
 };
 
 exports.getReviews = (req, res, next) => {
-  fetchReviews()
-    .then((reviews) => {
+  const {
+    sort_by,
+    order,
+    votes,
+    review_id,
+    title,
+    owner,
+    category,
+    designer,
+    created_at,
+  } = req.query;
+
+  const promises = [
+    fetchReviews(
+      sort_by,
+      order,
+      votes,
+      review_id,
+      title,
+      owner,
+      category,
+      designer,
+      created_at
+    ),
+  ];
+
+  if (category) {
+    promises.push(doesCategoryExist(category));
+  }
+
+  return Promise.all(promises)
+    .then(([reviews]) => {
       res.status(200).send({ reviews });
     })
     .catch((err) => {

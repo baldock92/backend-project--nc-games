@@ -365,3 +365,80 @@ describe("POST /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("GET /api/reviews(queries)", () => {
+  test("Status 200 - responds with an array of review objects, sorted by date as default", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toBeInstanceOf(Array);
+        expect(reviews).toHaveLength(13);
+        expect(reviews).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("Status 200 - responds with an array of review objects, sorted by a valid column", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toBeInstanceOf(Array);
+        expect(reviews).toHaveLength(13);
+        expect(reviews).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("Status 400 - Returns a bad request message when trying to sort by an invalid parameter", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=jolteon")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("Status 200 - responds with an array of review objects, ordered by a valid column (ascending or descending)", () => {
+    return request(app)
+      .get("/api/reviews?order=asc")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toBeInstanceOf(Array);
+        expect(reviews).toHaveLength(13);
+        expect(reviews).toBeSortedBy("created_at");
+      });
+  });
+  test("Status 200 - responds with an array of review objects, sorted by a valid parameter and ordered by a valid column (ascending or descending)", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes&order=asc")
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toBeInstanceOf(Array);
+        expect(reviews).toHaveLength(13);
+        expect(reviews).toBeSortedBy("votes");
+      });
+  });
+  test("Status 400 - responds with a `Bad request` message when trying to order by something that isn't ascending or descending", () => {
+    return request(app)
+      .get("/api/reviews?order=puppies")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("Status 200 - responds with an array of reviews objects, filtered by a valid inputted category", () => {
+    return request(app)
+      .get(`/api/reviews?category=dexterity`)
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toHaveLength(1);
+        expect(reviews[0].category).toBe("dexterity");
+      });
+  });
+
+  test("Status 200 - responds with an empty array when filtering by a valid category with no results", () => {
+    return request(app)
+      .get(`/api/reviews?category=children's games`)
+      .expect(200)
+      .then(({ body: { reviews } }) => {
+        expect(reviews).toEqual([]);
+      });
+  });
+});
