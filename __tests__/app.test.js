@@ -285,3 +285,83 @@ describe("GET - /api/reviews/:review_id/comments", () => {
   });
 });
 
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("should add a comment object witha  username and body properties, and return the posted comment", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "I hope this comment is posted",
+    };
+
+    return request(app)
+      .post("/api/reviews/2/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body: { comment } }) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            author: "mallionaire",
+            body: "I hope this comment is posted",
+            review_id: 2,
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test("400 - body is missing a mandatory key", () => {
+    const newComment = {
+      username: "mallionaire",
+    };
+
+    return request(app)
+      .post("/api/reviews/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Mandatory field missing");
+      });
+  });
+  test("404 - the review_id in the path does not exist", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "I hope this comment is posted",
+    };
+
+    return request(app)
+      .post("/api/reviews/99999/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+  test("404 - A user not in the database tries to post", () => {
+    const newComment = {
+      username: "Gandalf the Grey",
+      body: "Fly you fools!",
+    };
+
+    return request(app)
+      .post("/api/reviews/2/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("User not found");
+      });
+  });
+  test("400 - An invalid review_id is passed when trying to post a comment", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "I hope this comment is posted",
+    };
+
+    return request(app)
+      .post("/api/reviews/frodo/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
