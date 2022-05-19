@@ -441,4 +441,12 @@ describe("GET /api/reviews(queries)", () => {
         expect(reviews).toEqual([]);
       });
   });
+  test("Status 400 - responds with a Bad request message when trying to filter by a category which doesn't exist", () => {
+    return request(app)
+      .get(`/api/reviews?category=boring games`)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
 });
