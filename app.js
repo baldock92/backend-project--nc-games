@@ -7,7 +7,10 @@ const {
   getReviews,
 } = require("./controllers/reviews.controller");
 const { getUsers } = require("./controllers/users.controller");
-const { getCommentsByReviewId, postCommentByReviewId } = require("./controllers/comments.controller");
+const {
+  getCommentsByReviewId,
+  postCommentByReviewId,
+} = require("./controllers/comments.controller");
 
 const app = express();
 app.use(express.json());

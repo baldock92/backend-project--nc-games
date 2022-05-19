@@ -2,6 +2,7 @@ const {
   fetchCommentsByReviewId,
   getAllReviewsHere,
   addCommentByReviewId,
+  checkUserExists,
 } = require("../models/comments.model");
 
 exports.getCommentsByReviewId = (req, res, next) => {
@@ -23,17 +24,22 @@ exports.getCommentsByReviewId = (req, res, next) => {
 exports.postCommentByReviewId = (req, res, next) => {
   const { review_id } = req.params;
   const { username, body } = req.body;
-    console.log(req.body)
-    
+
   if (
-    req.body.hasOwnProperty("username") === false || 
+    req.body.hasOwnProperty("username") === false ||
     req.body.hasOwnProperty("body") === false
   ) {
     res.status(400).send({ msg: "Mandatory field missing" });
   }
 
-  addCommentByReviewId(review_id, username, body)
-    .then((comment) => {
+  const promises = [
+    getAllReviewsHere(review_id),
+    checkUserExists(username),
+    addCommentByReviewId(review_id, username, body),
+  ];
+
+  return Promise.all(promises)
+    .then(([irrelevant1, irrelevant2, comment]) => {
       res.status(201).send({ comment });
     })
     .catch((err) => {

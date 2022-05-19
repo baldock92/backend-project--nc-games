@@ -13,6 +13,18 @@ exports.getAllReviewsHere = (reviewId) => {
     });
 };
 
+exports.checkUserExists = (username) => {
+  return db
+    .query(`SELECT * FROM users WHERE username = $1;`, [username])
+    .then((matchedUser) => {
+      if (!matchedUser.rows.length) {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      } else {
+        return Promise.resolve();
+      }
+    });
+};
+
 exports.fetchCommentsByReviewId = (reviewId) => {
   let queryStr = `SELECT * FROM comments
     WHERE comments.review_id = $1`;

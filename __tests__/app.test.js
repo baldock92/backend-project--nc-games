@@ -336,4 +336,18 @@ describe("POST /api/reviews/:review_id/comments", () => {
         expect(msg).toBe("Not found");
       });
   });
+  test("404 - A user not in the database tries to post", () => {
+    const newComment = {
+      username: "Gandalf the Grey",
+      body: "Fly you fools!",
+    };
+
+    return request(app)
+      .post("/api/reviews/2/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("User not found");
+      });
+  });
 });
