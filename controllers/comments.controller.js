@@ -2,7 +2,6 @@ const {
   fetchCommentsByReviewId,
   getAllReviewsHere,
   addCommentByReviewId,
-  checkUserExists,
 } = require("../models/comments.model");
 
 exports.getCommentsByReviewId = (req, res, next) => {
@@ -34,12 +33,11 @@ exports.postCommentByReviewId = (req, res, next) => {
 
   const promises = [
     getAllReviewsHere(review_id),
-    checkUserExists(username),
     addCommentByReviewId(review_id, username, body),
   ];
 
   return Promise.all(promises)
-    .then(([irrelevant1, irrelevant2, comment]) => {
+    .then(([_, comment]) => {
       res.status(201).send({ comment });
     })
     .catch((err) => {

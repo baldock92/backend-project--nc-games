@@ -350,4 +350,18 @@ describe("POST /api/reviews/:review_id/comments", () => {
         expect(msg).toBe("User not found");
       });
   });
+  test("400 - An invalid review_id is passed when trying to post a comment", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "I hope this comment is posted",
+    };
+
+    return request(app)
+      .post("/api/reviews/frodo/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
 });
