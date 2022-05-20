@@ -472,3 +472,31 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
+describe("GET /api", () => {
+  test("Should return an object with the API endpoints on", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body: { data } }) => {
+        expect(data).toBeInstanceOf(Object);
+
+        const expected = {
+          description: "serves an array of all categories",
+          queries: [],
+          exampleResponse: {
+            categories: [
+              {
+                description:
+                  "Players attempt to uncover each other's hidden role",
+                slug: "Social deduction",
+              },
+            ],
+          },
+        };
+
+        expect(data["GET /api/categories"]).toEqual(expected);
+
+        expect(Object.keys(data)).toContain("GET /api/reviews/:review_id")
+      });
+  });
+});

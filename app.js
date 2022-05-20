@@ -12,6 +12,7 @@ const {
   postCommentByReviewId,
   removeCommentById,
 } = require("./controllers/comments.controller");
+const {getEndpoints} = require("./controllers/api.controller");
 
 const app = express();
 app.use(express.json());
@@ -26,6 +27,7 @@ app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
 app.delete("/api/comments/:comment_id", removeCommentById);
+app.get("/api", getEndpoints)
 //error handling below
 
 app.use("/*", (req, res, next) => {
