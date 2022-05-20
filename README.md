@@ -45,7 +45,7 @@ npm i
 -Creates files .env.test and .env.development in root directory
 -Enter the following in each file (without the ''s):
         PGDATABASE='database name here'
--Database names can be found in the db/setup.sql file.
+-The test database name is : nc_games_test   & the development database name is :   nc_games
 
 4. Seed local database
 ```js
