@@ -450,3 +450,25 @@ describe("GET /api/reviews(queries)", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("Status 204 - Deletes a specified comment by commend_id, returning nothing apart from a 204 status code", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+  test("Status 400 - comment_id in path is not a number", () => {
+    return request(app)
+      .delete("/api/comments/youreawizardharry")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("Status 404 - comment_id in path does not exist", () => {
+    return request(app)
+      .delete("/api/comments/999999")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+});
