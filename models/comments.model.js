@@ -41,3 +41,17 @@ exports.addCommentByReviewId = (reviewId, username, body) => {
       return data.rows[0];
     });
 };
+
+exports.deleteCommentById = (commentId) => {
+  return db
+    .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [
+      commentId,
+    ])
+    .then((data) => {
+      if (!data.rows.length) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      } else {
+        return Promise.resolve();
+      }
+    });
+};
