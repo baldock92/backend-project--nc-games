@@ -3,7 +3,6 @@ const {
   getAllReviewsHere,
   addCommentByReviewId,
   deleteCommentById,
-  doesCommentIdExist,
 } = require("../models/comments.model");
 
 exports.getCommentsByReviewId = (req, res, next) => {
@@ -49,12 +48,8 @@ exports.postCommentByReviewId = (req, res, next) => {
 
 exports.removeCommentById = (req, res, next) => {
   const { comment_id } = req.params;
-  const promises = [
-    deleteCommentById(comment_id),
-    doesCommentIdExist(comment_id),
-  ];
 
-  return Promise.all(promises)
+  deleteCommentById(comment_id)
     .then(() => {
       res.status(204).send();
     })
