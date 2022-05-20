@@ -1,10 +1,21 @@
-# Northcoders House of Games API
+# Northcoders House of Games API -  A Backend Project Game
+A backend project whilst learning with Northcoders Bootcamp school
 
-## Background
+## Link
+The link to the hosted version can be found below. This endpoints acts as a directory to view all currently available endpoints:
 
-I will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
+https://my-ncgame.herokuapp.com/api
 
-The database will be PSQL, and I will interact with it using node-postgres.
+
+## Summary
+
+You can find the needed information and files to create a database and node.js based API for a website to review board games.
+You'll be able to find:
+-Test and development data, written in Javascript.
+-Seed files to create a Postgresql database.
+-API made using express.js and using MVC framework.
+-Testing suites for all API endpoints using Jest and Supertest.
+
 
 ## Files to be added:
 
@@ -13,3 +24,33 @@ You can do this by setting up 2 files, .env.development & .env.test
 
 The .env.development will connect to the correct database using PGDATABASE=nc_games and the .env.test will connect to the correct database using PGDATABASE=nc_games_test
 
+## Requirements
+To deploy and run this project locally:
+
+-Postgres should be version 12.9 or higher
+-Node.js should be verison 18.0.0 or higher
+
+## How to run this locally
+To deploy and test this project locally (using ubuntu, other OS will vary):
+1. Clone repo in terminal
+```js
+git clone https://github.com/baldock92/backend-project--nc-games
+```
+2. Install dependencies
+```js
+npm i
+```
+3. Create local .env files:
+
+-Creates files .env.test and .env.development in root directory
+-Enter the following in each file (without the ''s):
+        PGDATABASE='database name here'
+-Database names can be found in the db/setup.sql file.
+
+4. Seed local database
+```js
+npm run setup-dbs
+```
+5. Run tests
+```js
+npm run test
