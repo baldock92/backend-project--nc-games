@@ -441,7 +441,7 @@ describe("GET /api/reviews(queries)", () => {
         expect(reviews).toEqual([]);
       });
   });
-  test("Status 400 - responds with a Bad request message when trying to filter by a category which doesn't exist", () => {
+  test("Status 404 - responds with a `Not found` message when trying to filter by a category which doesn't exist", () => {
     return request(app)
       .get(`/api/reviews?category=boring games`)
       .expect(404)
