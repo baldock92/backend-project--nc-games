@@ -50,7 +50,6 @@ exports.doesCommentIdExist = (commentId) => {
   return db
     .query(`SELECT * FROM comments WHERE comment_id = $1`, [commentId])
     .then((result) => {
-      console.log(result.rows);
       if (!result.rows.length) {
         return Promise.reject({ status: 404, msg: "Not found" });
       } else {
