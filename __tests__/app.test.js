@@ -496,7 +496,24 @@ describe("GET /api", () => {
 
         expect(data["GET /api/categories"]).toEqual(expected);
 
-        expect(Object.keys(data)).toContain("GET /api/reviews/:review_id")
+        expect(Object.keys(data)).toContain("GET /api/reviews/:review_id");
+      });
+  });
+});
+
+describe("GET user by username", () => {
+  test("Status 200 -  should return a user object when passed a valid username", () => {
+    return request(app)
+      .get("/api/users/bainesface")
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user).toBeInstanceOf(Object);
+        expect(user).toEqual({
+          username: "bainesface",
+          name: "sarah",
+          avatar_url:
+            "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+        });
       });
   });
 });

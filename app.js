@@ -6,7 +6,7 @@ const {
   updateReviewById,
   getReviews,
 } = require("./controllers/reviews.controller");
-const { getUsers } = require("./controllers/users.controller");
+const { getUsers, getUserByUsername } = require("./controllers/users.controller");
 const {
   getCommentsByReviewId,
   postCommentByReviewId,
@@ -28,6 +28,7 @@ app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
 app.delete("/api/comments/:comment_id", removeCommentById);
 app.get("/api", getEndpoints)
+app.get("/api/users/:username", getUserByUsername)
 //error handling below
 
 app.use("/*", (req, res, next) => {
