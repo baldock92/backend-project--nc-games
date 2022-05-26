@@ -6,13 +6,17 @@ const {
   updateReviewById,
   getReviews,
 } = require("./controllers/reviews.controller");
-const { getUsers, getUserByUsername } = require("./controllers/users.controller");
+const {
+  getUsers,
+  getUserByUsername,
+} = require("./controllers/users.controller");
 const {
   getCommentsByReviewId,
   postCommentByReviewId,
   removeCommentById,
+  updateCommentById,
 } = require("./controllers/comments.controller");
-const {getEndpoints} = require("./controllers/api.controller");
+const { getEndpoints } = require("./controllers/api.controller");
 
 const app = express();
 app.use(express.json());
@@ -27,8 +31,9 @@ app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
 app.delete("/api/comments/:comment_id", removeCommentById);
-app.get("/api", getEndpoints)
-app.get("/api/users/:username", getUserByUsername)
+app.get("/api", getEndpoints);
+app.get("/api/users/:username", getUserByUsername);
+app.patch("/api/comments/:comment_id", updateCommentById);
 //error handling below
 
 app.use("/*", (req, res, next) => {

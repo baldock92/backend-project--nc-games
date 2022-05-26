@@ -3,6 +3,7 @@ const {
   getAllReviewsHere,
   addCommentByReviewId,
   deleteCommentById,
+  patchCommentById,
 } = require("../models/comments.model");
 
 exports.getCommentsByReviewId = (req, res, next) => {
@@ -54,6 +55,24 @@ exports.removeCommentById = (req, res, next) => {
       res.status(204).send();
     })
     .catch((err) => {
+      next(err);
+    });
+};
+
+exports.updateCommentById = (req, res, next) => {
+  const { comment_id } = req.params;
+  const { inc_votes } = req.body;
+
+  if (req.body.hasOwnProperty("inc_votes") === false) {
+    res.status(400).send({ msg: "Bad request" });
+  }
+
+  patchCommentById(comment_id, inc_votes)
+    .then((comment) => {
+      res.status(200).send({ comment });
+    })
+    .catch((err) => {
+      console.log(err);
       next(err);
     });
 };

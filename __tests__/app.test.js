@@ -90,7 +90,6 @@ describe("Update review by review_id, PATCH /api/reviews/:review_id", () => {
   test(`Status 200 - Returns with the updated review, when provided with a review_id and a new Vote object`, () => {
     const newVote = { inc_votes: 3 };
 
-    //votes has 5 originally, adds 3 from inc_votes
     const expected = {
       review_id: 2,
       title: "Jenga",
@@ -514,6 +513,80 @@ describe("GET user by username", () => {
           avatar_url:
             "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
         });
+      });
+  });
+  test("Status 404 - should return with a `Not found` error message when a username doesn't exist", () => {
+    return request(app)
+      .get("/api/users/notavalidusername")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("User not found");
+      });
+  });
+});
+
+describe("PATCH - update comment votes by comment id", () => {
+  test("Status 200 - Should update the number of votes by a passed amount of votes, when given a valid comment_id, and returns the updated comment object", () => {
+    const updateVote = { inc_votes: 3 };
+
+    return request(app)
+      .patch("/api/comments/2")
+      .expect(200)
+      .send(updateVote)
+      .then(({ body: { comment } }) => {
+        const expected = {
+          comment_id: 2,
+          body: "My dog loved this game too!",
+          votes: 16,
+          author: "mallionaire",
+          review_id: 3,
+          created_at: "2021-01-18T10:09:05.410Z",
+        };
+        expect(comment).toEqual(expected);
+      });
+  });
+  test("Status 400 - Bad request message is returned when given a comment id which is not a number", () => {
+    const updateVote = { inc_votes: 3 };
+
+    return request(app)
+      .patch("/api/comments/notanumber")
+      .expect(400)
+      .send(updateVote)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("Status 404 - Not found message is returned when a numerical comment id which doesn't exist is given", () => {
+    const updateVote = { inc_votes: 3 };
+
+    return request(app)
+      .patch("/api/comments/999243927")
+      .expect(404)
+      .send(updateVote)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not found");
+      });
+  });
+  test("Status 400 - Bad request message is returned when an object without the mandatory key `inc_votes` is missing", () => {
+    const updateVote = { invalidKey: 3 };
+
+    return request(app)
+      .patch("/api/comments/2")
+      .expect(400)
+      .send(updateVote)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("Status 400 - Bad request message is returned when the passed object with inc_votes doesn't have a numerical value", () => {
+    const updateVote = { inc_votes: "notNumber" };
+
+    return request(app)
+      .patch("/api/comments/2")
+      .expect(400)
+      .send(updateVote)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
       });
   });
 });

@@ -55,3 +55,17 @@ exports.deleteCommentById = (commentId) => {
       }
     });
 };
+
+exports.patchCommentById = (comment_id, inc_votes) => {
+  return db
+    .query(
+      `UPDATE comments SET votes = votes + $2 WHERE comment_id = $1 RETURNING *`,
+      [comment_id, inc_votes]
+    )
+    .then((data) => {
+      if (!data.rows.length) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+      return data.rows[0];
+    });
+};
