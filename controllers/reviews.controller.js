@@ -4,6 +4,7 @@ const {
   patchReviewById,
   fetchReviews,
   doesCategoryExist,
+  addReview,
 } = require("../models/reviews.model");
 
 exports.getReviewById = (req, res, next) => {
@@ -65,6 +66,20 @@ exports.getReviews = (req, res, next) => {
   return Promise.all(promises)
     .then(([reviews]) => {
       res.status(200).send({ reviews });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.postReview = (req, res, next) => {
+ 
+  
+   const { title, designer, owner, review_body, category } = req.body;
+
+  addReview(title, designer, owner, review_body, category)
+    .then((review) => {
+      res.status(201).send({ review });
     })
     .catch((err) => {
       next(err);

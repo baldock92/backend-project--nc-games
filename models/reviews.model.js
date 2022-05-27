@@ -131,3 +131,17 @@ exports.fetchReviews = (
     return reviewsArr;
   });
 };
+
+exports.addReview = (title, designer, owner, review_body, category) => {
+  return db
+    .query(
+      `INSERT INTO reviews (title, designer, owner, review_body, category) VALUES ($1, $2, $3, $4, $5) RETURNING *`, [title, designer, owner, review_body, category]
+    )
+    .then((data) => {
+      data.rows[0].created_at = data.rows[0].created_at.toISOString();
+      console.log(data.rows[0])
+      return data.rows[0];
+    });
+};
+// COUNT(comments.review_id) AS comment_count FROM reviews
+//   LEFT JOIN comments on comments.review_id = reviews.review_id

@@ -5,10 +5,11 @@ const {
   getReviewById,
   updateReviewById,
   getReviews,
+  postReview
 } = require("./controllers/reviews.controller");
 const {
   getUsers,
-  getUserByUsername,
+  getUserByUsername
 } = require("./controllers/users.controller");
 const {
   getCommentsByReviewId,
@@ -34,6 +35,7 @@ app.delete("/api/comments/:comment_id", removeCommentById);
 app.get("/api", getEndpoints);
 app.get("/api/users/:username", getUserByUsername);
 app.patch("/api/comments/:comment_id", updateCommentById);
+app.post("/api/reviews", postReview);
 //error handling below
 
 app.use("/*", (req, res, next) => {
