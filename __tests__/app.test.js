@@ -615,7 +615,7 @@ describe("POST /api/reviews - add new review", () => {
             votes: expect.any(Number),
             created_at: expect.any(String),
             review_img_url: expect.any(String),
-            comment_count: expect.any(Number),
+            //comment_count: expect.any(Number),
           })
         );
       });
