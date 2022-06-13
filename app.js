@@ -18,7 +18,10 @@ const {
   updateCommentById,
 } = require("./controllers/comments.controller");
 const { getEndpoints } = require("./controllers/api.controller");
+const cors = require("cors");
 
+
+app.use(cors());
 const app = express();
 app.use(express.json());
 
