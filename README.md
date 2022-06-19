@@ -33,7 +33,7 @@ The .env.development will connect to the correct database using PGDATABASE=nc_ga
 To deploy and run this project locally:
 
 -Postgres should be version 12.9 or higher
--Node.js should be verison 18.0.0 or higher
+-Node.js should be verison v17.7.1 or higher
 
 ## How to run this locally
 To deploy and test this project locally (using ubuntu, other OS will vary):
