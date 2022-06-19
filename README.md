@@ -2,9 +2,14 @@
 A backend project whilst learning with Northcoders Bootcamp school
 
 ## Link
-The link to the hosted version can be found below. This endpoints acts as a directory to view all currently available endpoints:
+The link to the hosted version of the backend, frontend Github repo and hosted version of the whole app can be found below. 
 
-https://my-ncgame.herokuapp.com/api
+Backend endpoints : https://my-ncgame.herokuapp.com/api
+
+The hosted version of this app: https://baldock92-board-games.netlify.app/
+
+The frontend Github repo: https://github.com/baldock92/nc-games
+
 
 
 ## Summary

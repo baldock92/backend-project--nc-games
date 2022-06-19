@@ -472,11 +472,12 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 });
 describe("GET /api", () => {
-  test("Should return an object with the API endpoints on", () => {
+  test.only("Should return an object with the API endpoints on", () => {
     return request(app)
       .get("/api")
       .expect(200)
       .then(({ body: { data } }) => {
+        console.log(data)
         expect(data).toBeInstanceOf(Object);
 
         const expected = {
