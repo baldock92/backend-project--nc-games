@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { getCategories } = require("./controllers/categories.controller");
+const { getCategories, postCategory } = require("./controllers/categories.controller");
 const {
   getReviewById,
   updateReviewById,
@@ -38,6 +38,7 @@ app.get("/api", getEndpoints);
 app.get("/api/users/:username", getUserByUsername);
 app.patch("/api/comments/:comment_id", updateCommentById);
 app.post("/api/reviews", postReview);
+app.post("/api/categories", postCategory)
 //error handling below
 
 app.use("/*", (req, res, next) => {

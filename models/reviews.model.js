@@ -139,7 +139,7 @@ exports.addReview = (title, designer, owner, review_body, category) => {
     )
     .then((data) => {
       data.rows[0].created_at = data.rows[0].created_at.toISOString();
-      console.log(data.rows[0])
+      // console.log(data.rows[0])
       return data.rows[0];
     });
 };

@@ -12,3 +12,11 @@ exports.fetchCategories = () => {
     return results.rows;
   });
 };
+
+exports.addCategory = (newSlug, newDescription) => {
+  return db
+  .query(`INSERT INTO categories (slug, description) VALUES ($1, $2) RETURNING *`, [newSlug, newDescription])
+  .then((data) => {
+    return data.rows[0]
+  })
+}

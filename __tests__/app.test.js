@@ -472,12 +472,12 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 });
 describe("GET /api", () => {
-  test.only("Should return an object with the API endpoints on", () => {
+  test("Should return an object with the API endpoints on", () => {
     return request(app)
       .get("/api")
       .expect(200)
       .then(({ body: { data } }) => {
-        console.log(data)
+        console.log(data);
         expect(data).toBeInstanceOf(Object);
 
         const expected = {
@@ -591,8 +591,10 @@ describe("PATCH /api/comments/:comment_id - update comment votes by comment id",
       });
   });
 });
+
 describe("POST /api/reviews - add new review", () => {
-  test.only("Status 200 - should add a review object and return that object", () => {
+  //need to sort comment count!!
+  test.only("Status 201 - should add a review object and return that object", () => {
     const newReview = {
       title: "Best game ever",
       designer: "Mr bean",
@@ -623,3 +625,53 @@ describe("POST /api/reviews - add new review", () => {
   });
 });
 
+//NEED TO ADD ERROR TESTS TO THE ABOVE, AND SORT COMMENT COUNT
+
+describe("POST /api/categories - Add new category", () => {
+  test("Status 201 - Should add a new category object with 'slug' and 'description' keys, and return the object", () => {
+    const newCategory = {
+      slug: "Exciting new category",
+      description: "Wow, these games are so exciting!!",
+    };
+
+    return request(app)
+      .post("/api/categories")
+      .expect(201)
+      .send(newCategory)
+      .then(({ body }) => {
+        expect(body).toEqual(newCategory);
+      });
+  });
+  test("Status 400 - Sent category is missing at least 1 mandatory key", () => {
+    const wrongCategory = {
+      slug: "Exciting new category with wrong description",
+      desc: "Wow, these games are amazing!",
+    };
+
+    return request(app)
+      .post("/api/categories")
+      .expect(400)
+      .send(wrongCategory)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request - Field missing");
+      });
+  });
+  test("Status 201 - When an extra property on the object is sent, it is ignored and the correct information is posted and returned", () => {
+    const extraCategory = {
+      slug: "Exciting new category",
+      description: "Wow, these games are amazing!",
+      extra: "hello, I shouldn't be here",
+    };
+
+    return request(app)
+      .post("/api/categories")
+      .expect(201)
+      .send(extraCategory)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          slug: "Exciting new category",
+          description: "Wow, these games are amazing!",
+        });
+      });
+  });
+});
